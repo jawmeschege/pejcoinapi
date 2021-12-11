@@ -1,4 +1,4 @@
-# Node.js REST API Template
+# Pejcoin API's
 pejcoin holding apis
 
 ## Usage
