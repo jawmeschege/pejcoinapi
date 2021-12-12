@@ -23,7 +23,7 @@ const UserController = () => {
 
         return res.status(400).json({ msg: 'Bad Request: Passwords don\'t match' });
     };
-
+    
     const login = async(req, res) => {
         const { email, password } = req.body;
 

@@ -5,6 +5,7 @@ const middleware = require('./src/middleware');
 const errors = require('./src/errors');
 const healthRouter = require('./src/health/router');
 const taskRouter = require('./src/tasks/router');
+const transactionsRouter = require('./src/transactions/router');
 
 // Wire up middleware
 router.use(middleware.doSomethingInteresting);
@@ -12,6 +13,7 @@ router.use(middleware.doSomethingInteresting);
 // Wire up routers
 router.use('/health', healthRouter);
 router.use('/tasks', taskRouter);
+router.use('/transactions', transactionsRouter);
 
 // Wire up error-handling middleware
 router.use(errors.errorHandler);
