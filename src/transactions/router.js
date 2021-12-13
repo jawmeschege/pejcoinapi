@@ -10,5 +10,11 @@ const transactions = require('./index');
 router.get('/fetchTransactions', transactions.fetchTransactions);
 router.post('/createTransaction', transactions.createTransaction);
 
+router.get('/getvaults', transactions.fetchVaults);
+router.get('/sumvaults', transactions.sumUserVaults);
+router.get('/groupvaults', transactions.groupUserVaults);
+
+
+
 // Export the router
 module.exports = router;

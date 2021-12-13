@@ -1,4 +1,11 @@
 'use strict';
+const bcryptService = require('../src/services/bcrypt.service');
+
+const hooks = {
+  beforeCreate(user) {
+      user.password = bcryptService().password(user); // eslint-disable-line no-param-reassign
+  },
+};
 const {
   Model
 } = require('sequelize');
@@ -21,6 +28,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'User',
-  });
+  },{ hooks  });
   return User;
 };
