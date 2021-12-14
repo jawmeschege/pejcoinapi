@@ -13,8 +13,7 @@ router.post('/createTransaction', transactions.createTransaction);
 router.get('/getvaults', transactions.fetchVaults);
 router.get('/sumvaults', transactions.sumUserVaults);
 router.get('/groupvaults', transactions.groupUserVaults);
-
-
+router.get('/fetchRewards', transactions.fetchRewards);
 
 // Export the router
 module.exports = router;

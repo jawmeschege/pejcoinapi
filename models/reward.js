@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Reward.init({
-    classId: DataTypes.INTEGER,
+    vaultId: DataTypes.INTEGER,
     amount: DataTypes.DOUBLE,
     status: DataTypes.INTEGER
   }, {
