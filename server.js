@@ -25,7 +25,7 @@ app.use('/', routes);
 app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
-const whitelist = ["https://pejcoin.io"];
+const whitelist = ["https://wallet.pejcoin.io"];
 
 const corsOptions = {
     origin: function (origin, callback) {
