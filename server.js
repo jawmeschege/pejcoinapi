@@ -18,8 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short', { stream: logger.stream }));
 
-// Load up the routes
-app.use('/', routes);
+
 
 // Start the API
 app.listen(config.apiPort);
@@ -50,6 +49,9 @@ app.use((req, res, next) => {
 //     credentials: true,
 //   }
   app.use(cors())
+
+  // Load up the routes
+app.use('/', routes);
 
 
 // Export API server for testing
