@@ -48,28 +48,26 @@ var Sequelize = require('sequelize');
                 });
 
                 //record first reward for the stake
-                await db.Reward.create({
-                    vaultId:create_vault.id,
-                    amount: body.duration == 3 ? 1 * body.amount : body.duration == 6 ? 2 * body.amount : 12 * body.amount,
-                    status: 0   //status 0 means the reward is unclaimed and still virtual
-                });
-                
-                //record the reward transaction
-                await db.Transactions.create({
+                let create_reward = await db.Reward.create({
+                        vaultId:create_vault.id,
+                        amount: body.duration == 3 ? 1 * body.amount : body.duration == 6 ? 2 * body.amount : 12 * body.amount,
+                        status: 0   //status 0 means the reward is unclaimed and still virtual
+                    });
+
+                    await db.Transactions.create({
                     user_id: user_id,
                     amount: body.amount,
-                    txt_hash:body.txn_hash,
+                    txn_hash:body.txn_hash,
                     type:2, //Reward creation transaction
                     status:1  //statsu 1 means transaction has been execurtted
                 });
 
-                // record the reward balance
-                    //check if there exists a balance
+                //check if there exists a balance
                 let checkBalance = await db.RewardBalance.findOne({where:{userId:user_id}});
                 // console.log(checkBalance);
                 if(checkBalance){
-                    console.log()
-                    var newBal = checkBalance.amount + parseFloat(body.amount);
+                    // console.log()
+                    var newBal = checkBalance.amount + parseFloat(create_reward.amount);
                     await  db.RewardBalance.update({
                         amount: newBal
                     }, {where:{userId:user_id}});
@@ -79,7 +77,7 @@ var Sequelize = require('sequelize');
                         amount: body.amount,
                     });
                 }
-            
+
                 //record the reward credit
                   await db.RewardCredit.create({
                         userId: user_id,
@@ -150,11 +148,11 @@ var Sequelize = require('sequelize');
             // console.log(user);
             if(user){
                 const transactions = await db.Transactions.findAll({where:{user_id:user.id}});
-                console.log(transactions)
+                // console.log(transactions)
                 return res.status(200).json({ transactions });
     
             }else{
-                                let transactions = [];
+                let transactions = [];
                 return res.status(200).json({ transactions });
 
             }

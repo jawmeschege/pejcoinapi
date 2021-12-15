@@ -4,7 +4,7 @@
 const express = require('express');
 const app = express();
 const routes = require('./routes');
-// const cors = require("cors")
+const cors = require("cors")
 
 // Logging
 const morgan = require('morgan');
@@ -25,7 +25,7 @@ app.use('/', routes);
 app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
-const whitelist = ["https://wallet.pejcoin.io","localhost:3001"];
+// const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
 
 // const corsOptions = {
 //     origin: function (origin, callback) {
@@ -37,7 +37,7 @@ const whitelist = ["https://wallet.pejcoin.io","localhost:3001"];
 //     },
 //     credentials: true,
 //   }
-//   app.use(cors(corsOptions))
+  app.use(cors())
 
 
 // Export API server for testing
