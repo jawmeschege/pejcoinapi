@@ -145,13 +145,24 @@ var Sequelize = require('sequelize');
         try {
             
             let wallet = req.query.wallet;
+            if(wallet !== ''){
             let user = await db.User.findOne({where:{wallet_address:wallet}});
-            console.log(user);
+            // console.log(user);
+            if(user){
+                const transactions = await db.Transactions.findAll({where:{user_id:user.id}});
+                console.log(transactions)
+                return res.status(200).json({ transactions });
+    
+            }else{
+                let transactions = [];
+                return res.status(200).json({ transactions });
 
-            const transactions = await db.Transactions.findAll({where:{user_id:user.id}});
-            console.log(transactions)
+            }
+            }else{
+                let transactions = [];
+                return res.status(200).json({ transactions });
 
-            return res.status(200).json({ transactions });
+            }
         } catch (err) {
             console.log(err);
             return res.status(500).json({ msg: 'Internal server error' });
