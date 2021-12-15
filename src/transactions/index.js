@@ -154,7 +154,7 @@ var Sequelize = require('sequelize');
                 return res.status(200).json({ transactions });
     
             }else{
-                let transactions = [];
+                                let transactions = [];
                 return res.status(200).json({ transactions });
 
             }
