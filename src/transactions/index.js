@@ -8,6 +8,9 @@ var Sequelize = require('sequelize');
      exports.createTransaction = async(req, res) => {
         const { body, header } = req;
         
+
+        //fit=rst confirm the transaction has been recorded on the blockchain
+        
         // if (header.secKey === '123645') {
             try {
                 var user_id;
@@ -174,13 +177,22 @@ var Sequelize = require('sequelize');
     exports.sumUserVaults = async(req, res) => {
         try {
             let wallet = req.query.wallet;
+            if(wallet !== ''){
             let user = await db.User.findOne({where:{wallet_address:wallet}});
             // console.log(user);
-
-            const vaults = await db.VaultAccount.sum('amount',{where:{userId:user.id}});
-            // console.log(vaults)
-
-            return res.status(200).json({ vaults });
+            if(user){
+                const vaults = await db.VaultAccount.sum('amount',{where:{userId:user.id}});
+                // console.log(vaults)
+    
+                return res.status(200).json({ vaults });
+            }else{
+                const vaults = [];
+                return res.status(200).json({ vaults });
+            }
+            }else{
+                const vaults = [];
+                return res.status(200).json({ vaults });
+            }
         } catch (err) {
             console.log(err);
             return res.status(500).json({ msg: 'Internal server error' });
@@ -190,13 +202,24 @@ var Sequelize = require('sequelize');
     exports.fetchRewards = async(req, res) => {
         try {
             let wallet = req.query.wallet;
+            if(wallet !== ''){
+            
             let user = await db.User.findOne({where:{wallet_address:wallet}});
             // console.log(user);
-
+         if(user){
             const rewards = await db.RewardBalance.findOne({where:{userId:user.id}});
             console.log(rewards)
-
             return res.status(200).json({ rewards });
+
+         }else{
+            let rewards = [];
+            return res.status(200).json({ rewards });
+
+         }
+            }else{
+                let rewards = [];
+                return res.status(200).json({ rewards });
+            }
         } catch (err) {
             // console.log(err);
             return res.status(500).json({ msg: 'Internal server error' });
@@ -206,19 +229,29 @@ var Sequelize = require('sequelize');
     exports.groupUserVaults = async(req, res) => {
         try {
             let wallet = req.query.wallet;
-            let user = await db.User.findOne({where:{wallet_address:wallet}});
-            // console.log(user);
-
-            const vaultgroups = await db.VaultAccount.findAll({
-                attributes: [
-                  'lock_duration',
-                  [Sequelize.fn('sum', Sequelize.col('amount')), 'total_amount'],
-                ],
-                group: ['lock_duration'],
-                raw: true
-              },{where:{userId:user.id}});
-
-            return res.status(200).json({ vaultgroups });
+            if(wallet !== ''){
+                let user = await db.User.findOne({where:{wallet_address:wallet}});
+                // console.log(user);
+                if(user){
+                    const vaultgroups = await db.VaultAccount.findAll({
+                        attributes: [
+                          'lock_duration',
+                          [Sequelize.fn('sum', Sequelize.col('amount')), 'total_amount'],
+                        ],
+                        group: ['lock_duration'],
+                        raw: true
+                      },{where:{userId:user.id}});
+                      return res.status(200).json({ vaultgroups });
+                }else{
+                   let vaultgroups = [];
+                    return res.status(200).json({ vaultgroups });
+                }
+                
+            }else{
+                let vaultgroups = [];
+                return res.status(200).json({ vaultgroups });
+            }
+            
         } catch (err) {
             console.log(err)
             return res.status(500).json({ msg: 'Internal server error' });
