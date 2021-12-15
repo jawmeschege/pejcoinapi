@@ -25,6 +25,18 @@ app.use('/', routes);
 app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "https://wallet.pejcoin.io");
+    res.header(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization, 'Content-Type' : 'multipart/form-data' ,* "
+    );
+    res.header(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+    );
+    next();
+  });
 // const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
 
 // const corsOptions = {
