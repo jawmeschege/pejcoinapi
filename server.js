@@ -48,12 +48,10 @@ const corsOptions = {
     },
     credentials: true,
   }
-  app.use(cors(corsOptions))
-  if( req.headers.host === "https://wallet.pejcoin.io"){
-    // Load up the routes
-        app.use('/', routes);
-  }
+  app.use(cors(options))
 
+  // Load up the routes
+app.use('/', routes);
 
 
 // Export API server for testing
