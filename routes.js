@@ -7,6 +7,8 @@ const healthRouter = require('./src/health/router');
 const taskRouter = require('./src/tasks/router');
 const transactionsRouter = require('./src/transactions/router');
 const userRouter = require('./src/users/router');
+const filesRouter = require('./src/files/router');
+
 
 
 // Wire up middleware
@@ -17,6 +19,8 @@ router.use('/health', healthRouter);
 router.use('/tasks', taskRouter);
 router.use('/transactions', transactionsRouter);
 router.use('/user', userRouter);
+router.use('/files', filesRouter);
+
 
 
 // Wire up error-handling middleware
