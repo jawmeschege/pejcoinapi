@@ -36,19 +36,19 @@ app.use((req, res, next) => {
     );
     next();
   });
-// const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
+const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
 
-// const corsOptions = {
-//     origin: function (origin, callback) {
-//       if (!origin || whitelist.indexOf(origin) !== -1) {
-//         callback(null, true)
-//       } else {
-//         callback(new Error("Not allowed by CORS"))
-//       }
-//     },
-//     credentials: true,
-//   }
-  app.use(cors())
+const corsOptions = {
+    origin: function (origin, callback) {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error("Not allowed by CORS"))
+      }
+    },
+    credentials: true,
+  }
+  app.use(cors(corsOptions))
   if( req.headers.host === "https://wallet.pejcoin.io"){
     // Load up the routes
         app.use('/', routes);
