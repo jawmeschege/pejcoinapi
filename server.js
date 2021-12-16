@@ -25,6 +25,7 @@ app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
 app.use((req, res, next) => {
+    if( req.headers.host === "https://example.com") { 
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
@@ -34,6 +35,9 @@ app.use((req, res, next) => {
       "Access-Control-Allow-Methods",
       "GET, POST, PATCH, PUT, DELETE, OPTIONS"
     );
+    }else{
+        return res.status(401).json({ message: 'Access to endpoint is denied' });
+    }
     next();
   });
 // const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
