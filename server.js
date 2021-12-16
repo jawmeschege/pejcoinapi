@@ -25,7 +25,7 @@ app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
 app.use((req, res, next) => {
-    if( req.headers.host === "https://example.com") { 
+    if( req.headers.host === "https://wallet.pecoin.io") { 
     res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
