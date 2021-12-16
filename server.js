@@ -38,7 +38,7 @@ app.use((req, res, next) => {
     
     next();
   });
-const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
+const whitelist = ["https://staking.pejcoin.io","http://localhost:3001"];
 
 const corsOptions = {
     origin: function (origin, callback) {
