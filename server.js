@@ -18,7 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('short', { stream: logger.stream }));
 
-
+// Load up the routes
+app.use('/', routes);
 
 // Start the API
 app.listen(config.apiPort);
@@ -36,22 +37,19 @@ app.use((req, res, next) => {
     );
     next();
   });
-const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
+// const whitelist = ["https://wallet.pejcoin.io","http://localhost:3001"];
 
-const corsOptions = {
-    origin: function (origin, callback) {
-      if (!origin || whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error("Not allowed by CORS"))
-      }
-    },
-    credentials: true,
-  }
-  app.use(cors(options))
-
-  // Load up the routes
-app.use('/', routes);
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//       if (!origin || whitelist.indexOf(origin) !== -1) {
+//         callback(null, true)
+//       } else {
+//         callback(new Error("Not allowed by CORS"))
+//       }
+//     },
+//     credentials: true,
+//   }
+  app.use(cors())
 
 
 // Export API server for testing
