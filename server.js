@@ -26,7 +26,7 @@ app.listen(config.apiPort);
 logger.log('info', `api running on port ${config.apiPort}`);
 
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "https://wallet.pejcoin.io");
+    res.header("Access-Control-Allow-Origin", "*");
     res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept, Authorization, 'Content-Type' : 'multipart/form-data' ,* "
