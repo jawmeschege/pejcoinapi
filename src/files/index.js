@@ -27,7 +27,7 @@ exports.getListFiles = (req, res) => {
 
  exports.downloadPrice = async (req, res) => {
     try {
-        const directoryPath = __dirname + "/data/prices.tsv";
+        const directoryPath = __dirname + "/data/pejprices.tsv";
         const fileName = 'prices.tsv'
         const fileURL = directoryPath
         const stream = fs.createReadStream(fileURL);
