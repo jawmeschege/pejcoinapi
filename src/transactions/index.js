@@ -46,11 +46,12 @@ var Sequelize = require('sequelize');
                     lock_duration: parseFloat(body.lock_duration),
                     status:1
                 });
-
+                
+                console.log(create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount)
                 //record first reward for the stake
                 let create_reward = await db.Reward.create({
                         vaultId:create_vault.id,
-                        amount: create_vault.duration == 3 ? 1 * create_vault.amount : create_vault.duration == 6 ? 2 * create_vault.amount : 2 * create_vault.amount,
+                        amount: create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount,
                         status: 0   //status 0 means the reward is unclaimed and still virtual
                     });
 
