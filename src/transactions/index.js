@@ -68,21 +68,21 @@ var Sequelize = require('sequelize');
                 // console.log(checkBalance);
                 if(checkBalance){
                     // console.log()
-                    var newBal = checkBalance.amount + parseFloat(create_reward.amount);
+                    var newBal = checkBalance.amount + parseFloat(create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount);
                     await  db.RewardBalance.update({
                         amount: newBal
                     }, {where:{userId:user_id}});
                 }else{
                     await db.RewardBalance.create({
                         userId: user_id,
-                        amount: body.amount,
+                        amount: create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount,
                     });
                 }
-
+                
                 //record the reward credit
                   await db.RewardCredit.create({
                         userId: user_id,
-                        amount: body.amount,
+                        amount: create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount,
                     });
 
                 return res.status(200).json({ message: 'Transaction record created successfully and registered on the blockchain' });
