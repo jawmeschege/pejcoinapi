@@ -50,7 +50,7 @@ var Sequelize = require('sequelize');
                 //record first reward for the stake
                 let create_reward = await db.Reward.create({
                         vaultId:create_vault.id,
-                        amount: body.duration == 3 ? 1 * body.amount : body.duration == 6 ? 2 * body.amount : 12 * body.amount,
+                        amount: create_vault.duration == 3 ? 1 * create_vault.amount : create_vault.duration == 6 ? 2 * create_vault.amount : 2 * create_vault.amount,
                         status: 0   //status 0 means the reward is unclaimed and still virtual
                     });
 
