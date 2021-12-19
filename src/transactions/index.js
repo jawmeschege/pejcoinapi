@@ -1,6 +1,9 @@
 // const authService = require('../../services/auth.service');
 // const bcryptService = require('../../services/bcrypt.service');
 const authService = require('../services/auth.service');
+const Web3 = require('web3');
+
+web3 = new Web3('https://bsc-dataseed.binance.org');
 
 const db = require('../../models');
 var Sequelize = require('sequelize');
@@ -8,10 +11,10 @@ var Sequelize = require('sequelize');
      exports.createTransaction = async(req, res) => {
         const { body, header } = req;
         
-
-        //fit=rst confirm the transaction has been recorded on the blockchain
-        
-        // if (header.secKey === '123645') {
+        //first confirm the transaction has been recorded on the blockchain
+          let validator =  await validateReward(String(body.txn_hash), body.address)
+            
+          if(validator){
             try {
                 var user_id;
                 var user = await db.User.findOne({where:{wallet_address:body.address}});
@@ -23,7 +26,7 @@ var Sequelize = require('sequelize');
                         password: body.address,
                     });
 
-                    // const token = authService().issue({ id: user.id });
+                        // const token = authService().issue({ id: user.id });
                     user_id = usr.id;
                     
                 }else{
@@ -32,7 +35,7 @@ var Sequelize = require('sequelize');
                 const transaction = await db.Transactions.create({
                     user_id: user_id,
                     amount: body.amount,
-                    txt_hash:body.txn_hash,
+                    txn_hash:body.txn_hash,
                     type:1, //vault creation transaction
                     status:1  //statsu 1 means transaction has been execurtted
                 });
@@ -92,7 +95,9 @@ var Sequelize = require('sequelize');
                 console.log(err);
                 return res.status(500).json({ msg: 'Internal server error' });
             }
-        // }
+        }else{
+            return res.status(403).json({ msg: 'Wrong transaction' });
+        }
 
     };
     
@@ -128,16 +133,16 @@ var Sequelize = require('sequelize');
         return res.status(400).json({ msg: 'Bad Request: Email or password is wrong' });
     };
 
-    exports.validateReward = (req, res) => {
-        const { token } = req.body;
+    const validateReward = async (txn_hash, address) => {
+        let if_exists = await web3.eth.getTransactionReceipt(String(txn_hash));
 
-        authService().verify(token, (err) => {
-            if (err) {
-                return res.status(401).json({ isvalid: false, err: 'Invalid Token!' });
-            }
+        if(if_exists &&  if_exists.from.toLowerCase() == address.toLowerCase()){
+           return true;
 
-            return res.status(200).json({ isvalid: true });
-        });
+        }else{
+            return false;
+        }
+        
     };
 
     exports.fetchTransactions = async(req, res) => {
@@ -215,6 +220,7 @@ var Sequelize = require('sequelize');
             if(wallet !== ''){
             
             let user = await db.User.findOne({where:{wallet_address:wallet}});
+
             // console.log(user);
          if(user){
             const rewards = await db.RewardBalance.findOne({where:{userId:user.id}});
