@@ -78,7 +78,7 @@ var Sequelize = require('sequelize');
                         amount: create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount,
                     });
                 }
-                
+
                 //record the reward credit
                   await db.RewardCredit.create({
                         userId: user_id,
@@ -244,13 +244,14 @@ var Sequelize = require('sequelize');
                 // console.log(user);
                 if(user){
                     const vaultgroups = await db.VaultAccount.findAll({
+                        where:{userId:user.id},
                         attributes: [
                           'lock_duration',
                           [Sequelize.fn('sum', Sequelize.col('amount')), 'total_amount'],
                         ],
                         group: ['lock_duration'],
                         raw: true
-                      },{where:{userId:user.id}});
+                      });
                       return res.status(200).json({ vaultgroups });
                 }else{
                    let vaultgroups = [];
