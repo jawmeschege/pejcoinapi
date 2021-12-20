@@ -10,9 +10,9 @@ var Sequelize = require('sequelize');
 
      exports.createTransaction = async(req, res) => {
         const { body, header } = req;
-        
+
         //first confirm the transaction has been recorded on the blockchain
-          let validator =  await validateReward(String(body.txn_hash), body.address)
+        let validator =  await validateReward(String(body.txn_hash), body.address)
             
           if(validator){
             try {
@@ -50,7 +50,7 @@ var Sequelize = require('sequelize');
                     status:1
                 });
                 
-                console.log(create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount)
+                // console.log(create_vault.lock_duration == 3 ? 1 * create_vault.amount : create_vault.lock_duration == 6 ? 2 * create_vault.amount : 3 * create_vault.amount)
                 //record first reward for the stake
                 let create_reward = await db.Reward.create({
                         vaultId:create_vault.id,
@@ -145,6 +145,8 @@ var Sequelize = require('sequelize');
         
     };
 
+
+
     exports.fetchTransactions = async(req, res) => {
         try {
             
@@ -219,18 +221,28 @@ var Sequelize = require('sequelize');
             let wallet = req.query.wallet;
             if(wallet !== ''){
             
-            let user = await db.User.findOne({where:{wallet_address:wallet}});
+                let user = await db.User.findOne({where:{wallet_address:wallet}});
 
             // console.log(user);
          if(user){
-            const rewards = await db.RewardBalance.findOne({where:{userId:user.id}});
-            console.log(rewards)
+            let user_vaults = await db.VaultAccount.findAll({where:{userId:user.id}});
+            let user_rewards = 0;
+
+              for (const element of user_vaults) {
+                 
+                    let reward = await db.Reward.findOne({where:{vaultId:element.id}});
+                    var today = new Date();
+                    var curr_reward = (dateDifference(today, new Date(reward.createdAt))+1) * reward.amount;
+                    user_rewards += curr_reward;
+                   }
+
+                   const rewards = {amount:user_rewards}
+            // console.log(rewards)
             return res.status(200).json({ rewards });
 
          }else{
             let rewards = [];
             return res.status(200).json({ rewards });
-
          }
             }else{
                 let rewards = [];
@@ -241,6 +253,16 @@ var Sequelize = require('sequelize');
             return res.status(500).json({ msg: 'Internal server error' });
         }
     };
+
+    function dateDifference(date2, date1) {
+        const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+    
+        // Discard the time and time-zone information.
+        const utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());
+        const utc2 = Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate());
+    
+        return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
 
     exports.groupUserVaults = async(req, res) => {
         try {
